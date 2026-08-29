@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cronograma VSL Guilherme</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -78,7 +79,8 @@
   .progress{
     display:flex;
     align-items:center;
-    gap:16px;
+    flex-wrap:wrap;
+    gap:10px 16px;
     padding:16px 0 20px;
     border-top:1px solid var(--line-strong);
     border-bottom:1px solid var(--line-strong);
@@ -93,7 +95,7 @@
     white-space:nowrap;
     font-variant-numeric:tabular-nums;
   }
-  .bar{flex:1;height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+  .bar{flex:1 1 160px;height:4px;border-radius:2px;background:var(--line);overflow:hidden}
   .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .34s cubic-bezier(.4,0,.2,1)}
 
   /* ---------- trilha ---------- */
@@ -117,9 +119,10 @@
     padding:24px 26px 26px 0;
     cursor:pointer;
     border-radius:6px;
+    -webkit-tap-highlight-color:transparent;
     transition:background .2s ease;
   }
-  .phase:hover{background:var(--accent-soft)}
+  @media (hover:hover){ .phase:hover{background:var(--accent-soft)} }
   .phase input{position:absolute;opacity:0;width:0;height:0}
 
   .box{
@@ -207,6 +210,16 @@
     .box svg{width:13px;height:13px}
     .track::before{left:13px;top:56px;bottom:54px}
     .deliver{display:flex;flex-direction:column;gap:5px}
+  }
+
+  @media (max-width:430px){
+    .wrap{padding:0 16px}
+    header{padding:40px 0 22px}
+    h1{font-size:clamp(1.95rem,9vw,2.6rem)}
+    h2{font-size:1.3rem}
+    .phase{gap:14px;padding:18px 4px 20px 0}
+    .items li{font-size:.95rem}
+    footer{flex-direction:column;gap:8px}
   }
 </style>
 
