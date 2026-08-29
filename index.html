@@ -1,0 +1,340 @@
+<meta charset="utf-8">
+<title>Cronograma VSL Guilherme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  body{margin:0}
+  p{margin:0}
+  ul{margin:0;padding:0;list-style:none}
+
+  :root{
+    --paper:#F4F5F2;
+    --surface:#FFFFFF;
+    --ink:#0F1A16;
+    --ink-2:#3A4842;
+    --muted:#6E7C75;
+    --line:#DCE0DA;
+    --line-strong:#C3CAC2;
+    --accent:#1E6E4C;
+    --accent-soft:#E4EFE7;
+    --shadow:0 1px 2px rgba(15,26,22,.05), 0 12px 28px -18px rgba(15,26,22,.28);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0C1310;
+      --surface:#131C18;
+      --ink:#EAEFEA;
+      --ink-2:#BAC5BE;
+      --muted:#889690;
+      --line:#22302A;
+      --line-strong:#33443C;
+      --accent:#5FD59B;
+      --accent-soft:#16271F;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 30px -18px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0C1310;
+    --surface:#131C18;
+    --ink:#EAEFEA;
+    --ink-2:#BAC5BE;
+    --muted:#889690;
+    --line:#22302A;
+    --line-strong:#33443C;
+    --accent:#5FD59B;
+    --accent-soft:#16271F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 30px -18px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Archivo","Helvetica Neue",Arial,sans-serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:0 28px}
+
+  .eyebrow{
+    font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-size:.72rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  h1,h2{font-family:"Fraunces","Iowan Old Style",Georgia,serif;margin:0;font-weight:600;text-wrap:balance}
+
+  /* ---------- topo ---------- */
+  header{padding:72px 0 34px;display:flex;flex-direction:column;gap:14px}
+  h1{font-size:clamp(2.3rem,5.6vw,3.4rem);line-height:1.02;letter-spacing:-.02em;font-weight:700}
+  .sub{color:var(--ink-2);max-width:56ch;font-size:1.05rem}
+  .sub b{color:var(--ink);font-weight:600}
+
+  /* ---------- progresso ---------- */
+  .progress{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding:16px 0 20px;
+    border-top:1px solid var(--line-strong);
+    border-bottom:1px solid var(--line-strong);
+    margin-top:12px;
+  }
+  .progress .count{
+    font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-size:.76rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
+  .bar{flex:1;height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .34s cubic-bezier(.4,0,.2,1)}
+
+  /* ---------- trilha ---------- */
+  .track{position:relative;padding:36px 0 10px;display:flex;flex-direction:column;gap:18px}
+  .track::before{
+    content:"";
+    position:absolute;
+    left:15px;
+    top:64px;
+    bottom:62px;
+    width:1px;
+    background:var(--line-strong);
+  }
+
+  .phase{
+    position:relative;
+    display:grid;
+    grid-template-columns:30px 1fr;
+    gap:22px;
+    align-items:start;
+    padding:24px 26px 26px 0;
+    cursor:pointer;
+    border-radius:6px;
+    transition:background .2s ease;
+  }
+  .phase:hover{background:var(--accent-soft)}
+  .phase input{position:absolute;opacity:0;width:0;height:0}
+
+  .box{
+    width:30px;height:30px;
+    border:1.5px solid var(--line-strong);
+    border-radius:50%;
+    background:var(--paper);
+    display:flex;align-items:center;justify-content:center;
+    flex:none;
+    transition:background .2s ease, border-color .2s ease;
+    z-index:1;
+  }
+  .box svg{width:15px;height:15px;stroke:var(--paper);stroke-width:2.6;fill:none;
+    stroke-linecap:round;stroke-linejoin:round;
+    opacity:0;transform:scale(.6);transition:opacity .18s ease, transform .18s ease}
+  .phase input:focus-visible + .box{outline:2px solid var(--accent);outline-offset:3px}
+
+  .phase.done .box{background:var(--accent);border-color:var(--accent)}
+  .phase.done .box svg{opacity:1;transform:scale(1)}
+
+  .meta{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:5px}
+  .num{
+    font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);
+  }
+  .date{
+    font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  }
+  h2{font-size:1.5rem;line-height:1.15;letter-spacing:-.012em;margin-bottom:14px}
+
+  .items li{
+    display:grid;grid-template-columns:14px 1fr;gap:10px;align-items:start;
+    font-size:.98rem;line-height:1.5;color:var(--ink-2);padding:3px 0;
+  }
+  .items li::before{content:"";width:6px;height:6px;margin-top:.62em;margin-left:3px;
+    background:var(--line-strong);border-radius:50%}
+
+  .deliver{
+    margin-top:15px;
+    display:inline-flex;
+    gap:9px;
+    align-items:baseline;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:10px 14px;
+    font-size:.93rem;
+    color:var(--ink);
+    box-shadow:var(--shadow);
+  }
+  .deliver span{
+    font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);
+    white-space:nowrap;
+  }
+
+  .phase.done h2,.phase.done .items li{color:var(--muted)}
+  .phase.done h2{text-decoration:line-through;text-decoration-color:var(--line-strong);text-decoration-thickness:1.5px}
+  .phase.done .deliver{opacity:.62}
+
+  /* ---------- nota + rodape ---------- */
+  .note{
+    margin-top:26px;
+    padding:16px 18px;
+    background:var(--accent-soft);
+    border-radius:5px;
+    font-size:.93rem;
+    line-height:1.5;
+    color:var(--ink-2);
+    max-width:64ch;
+  }
+  .note b{color:var(--ink);font-weight:600}
+
+  footer{
+    margin-top:34px;
+    padding:22px 0 70px;
+    border-top:1px solid var(--line);
+    color:var(--muted);
+    font-size:.86rem;
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  footer span{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;font-size:.7rem}
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important}
+  }
+  @media (max-width:720px){
+    body{font-size:16px}
+    .wrap{padding:0 20px}
+    header{padding:48px 0 28px}
+    .phase{grid-template-columns:26px 1fr;gap:16px;padding:20px 14px 22px 0}
+    .box{width:26px;height:26px}
+    .box svg{width:13px;height:13px}
+    .track::before{left:13px;top:56px;bottom:54px}
+    .deliver{display:flex;flex-direction:column;gap:5px}
+  }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Coprodução · Nicho de inglês</p>
+    <h1>Cronograma de entregas</h1>
+    <p class="sub">Nova VSL e primeira leva de criativos. Três entregas, <b>tudo na sua mão até sexta, 4 de setembro</b>.</p>
+  </header>
+
+  <div class="progress">
+    <span class="count" id="count">0 de 3 entregues</span>
+    <span class="bar"><i id="bar"></i></span>
+  </div>
+
+  <div class="track">
+
+    <label class="phase" data-key="fase1">
+      <input type="checkbox">
+      <span class="box"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4,12.5 9.5,18 20,6.5"></polyline></svg></span>
+      <div>
+        <div class="meta">
+          <span class="num">Fase 1</span>
+          <span class="date">Segunda · 31 de agosto</span>
+        </div>
+        <h2>Estratégia e oferta</h2>
+        <ul class="items">
+          <li><span>Promessa central</span></li>
+          <li><span>Mecanismo único do problema</span></li>
+          <li><span>Mecanismo único da solução</span></li>
+          <li><span>Nome do curso do front</span></li>
+          <li><span>Oferta completa — entregável principal e bônus</span></li>
+        </ul>
+        <p class="deliver"><span>Entrega</span> Documento de estratégia com tudo mapeado</p>
+      </div>
+    </label>
+
+    <label class="phase" data-key="fase2">
+      <input type="checkbox">
+      <span class="box"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4,12.5 9.5,18 20,6.5"></polyline></svg></span>
+      <div>
+        <div class="meta">
+          <span class="num">Fase 2</span>
+          <span class="date">Quarta · 2 de setembro</span>
+        </div>
+        <h2>VSL completa</h2>
+        <ul class="items">
+          <li><span>Lead 1</span></li>
+          <li><span>Lead 2</span></li>
+          <li><span>Lead 3</span></li>
+          <li><span>Corpo completo da VSL</span></li>
+        </ul>
+        <p class="deliver"><span>Entrega</span> Roteiro pronto para gravar</p>
+      </div>
+    </label>
+
+    <label class="phase" data-key="fase3">
+      <input type="checkbox">
+      <span class="box"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4,12.5 9.5,18 20,6.5"></polyline></svg></span>
+      <div>
+        <div class="meta">
+          <span class="num">Fase 3</span>
+          <span class="date">Sexta · 4 de setembro</span>
+        </div>
+        <h2>Anúncios</h2>
+        <ul class="items">
+          <li><span>10 criativos para a primeira leva de teste</span></li>
+        </ul>
+        <p class="deliver"><span>Entrega</span> Roteiros dos criativos</p>
+      </div>
+    </label>
+
+  </div>
+
+  <p class="note">A escrita da VSL corre <b>em paralelo</b> à sua revisão do documento da Fase 1 — por isso a Fase 2 cai só dois dias depois. Se algo mudar no mecanismo ou na oferta durante a revisão, eu ajusto o roteiro antes da entrega de quarta.</p>
+
+  <footer>
+    <span>Matheus Luswarghi · Estratégia e copy</span>
+    <span>Gravação, edição e subida de campanha ficam fora deste cronograma</span>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var phases = Array.prototype.slice.call(document.querySelectorAll('.phase'));
+    var count = document.getElementById('count');
+    var bar = document.getElementById('bar');
+
+    function read(key) {
+      try { return localStorage.getItem(key) === '1'; } catch (e) { return false; }
+    }
+    function write(key, value) {
+      try { localStorage.setItem(key, value ? '1' : '0'); } catch (e) {}
+    }
+    function render() {
+      var done = 0;
+      phases.forEach(function (phase) {
+        var on = phase.querySelector('input').checked;
+        phase.classList.toggle('done', on);
+        if (on) done++;
+      });
+      count.textContent = done + ' de ' + phases.length + ' entregues';
+      bar.style.width = (done / phases.length * 100) + '%';
+    }
+
+    phases.forEach(function (phase) {
+      var input = phase.querySelector('input');
+      input.checked = read(phase.dataset.key);
+      input.addEventListener('change', function () {
+        write(phase.dataset.key, input.checked);
+        render();
+      });
+    });
+
+    render();
+  })();
+</script>
