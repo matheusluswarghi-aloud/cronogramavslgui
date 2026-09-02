@@ -261,14 +261,14 @@
   </header>
 
   <div class="progress">
-    <span class="count" id="count">0 de 4 entregues</span>
-    <span class="bar"><i id="bar"></i></span>
+    <span class="count" id="count">1 de 4 entregues</span>
+    <span class="bar"><i id="bar" style="width:25%"></i></span>
   </div>
 
   <div class="track">
 
-    <label class="phase" data-key="fase1">
-      <input type="checkbox">
+    <label class="phase done" data-key="fase1">
+      <input type="checkbox" checked>
       <span class="box"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4,12.5 9.5,18 20,6.5"></polyline></svg></span>
       <div>
         <div class="meta">
@@ -356,7 +356,7 @@
     var bar = document.getElementById('bar');
 
     function read(key) {
-      try { return localStorage.getItem(key) === '1'; } catch (e) { return false; }
+      try { return localStorage.getItem(key); } catch (e) { return null; }
     }
     function write(key, value) {
       try { localStorage.setItem(key, value ? '1' : '0'); } catch (e) {}
@@ -374,7 +374,8 @@
 
     phases.forEach(function (phase) {
       var input = phase.querySelector('input');
-      input.checked = read(phase.dataset.key);
+      var stored = read(phase.dataset.key);
+      if (stored !== null) input.checked = (stored === '1');
       input.addEventListener('change', function () {
         write(phase.dataset.key, input.checked);
         render();
