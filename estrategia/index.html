@@ -1,0 +1,503 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estratégia English Together</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  body{margin:0}
+  p{margin:0}
+  ul{margin:0;padding:0;list-style:none}
+
+  :root{
+    --paper:#F4F5F2;
+    --surface:#FFFFFF;
+    --ink:#0F1A16;
+    --ink-2:#3A4842;
+    --muted:#6E7C75;
+    --line:#DCE0DA;
+    --line-strong:#C3CAC2;
+    --accent:#1E6E4C;
+    --accent-soft:#E4EFE7;
+    --shadow:0 1px 2px rgba(15,26,22,.05), 0 12px 28px -18px rgba(15,26,22,.28);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0C1310;
+      --surface:#131C18;
+      --ink:#EAEFEA;
+      --ink-2:#BAC5BE;
+      --muted:#889690;
+      --line:#22302A;
+      --line-strong:#33443C;
+      --accent:#5FD59B;
+      --accent-soft:#16271F;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 30px -18px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0C1310;
+    --surface:#131C18;
+    --ink:#EAEFEA;
+    --ink-2:#BAC5BE;
+    --muted:#889690;
+    --line:#22302A;
+    --line-strong:#33443C;
+    --accent:#5FD59B;
+    --accent-soft:#16271F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 30px -18px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Archivo","Helvetica Neue",Arial,sans-serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:0 28px}
+
+  .eyebrow{
+    font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-size:.72rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  h1,h2{font-family:"Fraunces","Iowan Old Style",Georgia,serif;margin:0;font-weight:600;text-wrap:balance}
+
+  /* ---------- abas ---------- */
+  .tabs{
+    display:flex;
+    gap:28px;
+    padding-top:30px;
+    border-bottom:1px solid var(--line);
+  }
+  .tab{
+    font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-size:.72rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+    text-decoration:none;
+    padding-bottom:13px;
+    margin-bottom:-1px;
+    border-bottom:2px solid transparent;
+    transition:color .2s ease, border-color .2s ease;
+    white-space:nowrap;
+  }
+  .tab:hover{color:var(--ink)}
+  .tab[aria-current="page"]{color:var(--accent);border-bottom-color:var(--accent)}
+  .tab:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:2px}
+
+  /* ---------- topo ---------- */
+  header{padding:44px 0 34px;display:flex;flex-direction:column;gap:14px}
+  h1{font-size:clamp(2.3rem,5.6vw,3.4rem);line-height:1.02;letter-spacing:-.02em;font-weight:700}
+  .sub{color:var(--ink-2);max-width:56ch;font-size:1.05rem}
+  .sub b{color:var(--ink);font-weight:600}
+
+  /* ---------- progresso ---------- */
+  .progress{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px 16px;
+    padding:16px 0 20px;
+    border-top:1px solid var(--line-strong);
+    border-bottom:1px solid var(--line-strong);
+    margin-top:12px;
+  }
+  .progress .count{
+    font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-size:.76rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
+  .bar{flex:1 1 160px;height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .34s cubic-bezier(.4,0,.2,1)}
+
+  /* ---------- trilha ---------- */
+  .track{position:relative;padding:36px 0 10px;display:flex;flex-direction:column;gap:18px}
+  .track::before{
+    content:"";
+    position:absolute;
+    left:15px;
+    top:64px;
+    bottom:62px;
+    width:1px;
+    background:var(--line-strong);
+  }
+
+  .phase{
+    position:relative;
+    display:grid;
+    grid-template-columns:30px 1fr;
+    gap:22px;
+    align-items:start;
+    padding:24px 26px 26px 0;
+    cursor:pointer;
+    border-radius:6px;
+    -webkit-tap-highlight-color:transparent;
+    transition:background .2s ease;
+  }
+  @media (hover:hover){ .phase:hover{background:var(--accent-soft)} }
+  .phase input{position:absolute;opacity:0;width:0;height:0}
+
+  .box{
+    width:30px;height:30px;
+    border:1.5px solid var(--line-strong);
+    border-radius:50%;
+    background:var(--paper);
+    display:flex;align-items:center;justify-content:center;
+    flex:none;
+    transition:background .2s ease, border-color .2s ease;
+    z-index:1;
+  }
+  .box svg{width:15px;height:15px;stroke:var(--paper);stroke-width:2.6;fill:none;
+    stroke-linecap:round;stroke-linejoin:round;
+    opacity:0;transform:scale(.6);transition:opacity .18s ease, transform .18s ease}
+  .phase input:focus-visible + .box{outline:2px solid var(--accent);outline-offset:3px}
+
+  .phase.done .box{background:var(--accent);border-color:var(--accent)}
+  .phase.done .box svg{opacity:1;transform:scale(1)}
+
+  .meta{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:5px}
+  .num{
+    font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);
+  }
+  .date{
+    font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  }
+  h2{font-size:1.5rem;line-height:1.15;letter-spacing:-.012em;margin-bottom:14px}
+
+  .items li{
+    display:grid;grid-template-columns:14px 1fr;gap:10px;align-items:start;
+    font-size:.98rem;line-height:1.5;color:var(--ink-2);padding:3px 0;
+  }
+  .items li::before{content:"";width:6px;height:6px;margin-top:.62em;margin-left:3px;
+    background:var(--line-strong);border-radius:50%}
+
+  .deliver{
+    margin-top:15px;
+    display:inline-flex;
+    gap:9px;
+    align-items:baseline;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:10px 14px;
+    font-size:.93rem;
+    color:var(--ink);
+    box-shadow:var(--shadow);
+  }
+  .deliver span{
+    font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);
+    white-space:nowrap;
+  }
+
+  .phase.done h2,.phase.done .items li{color:var(--muted)}
+  .phase.done h2{text-decoration:line-through;text-decoration-color:var(--line-strong);text-decoration-thickness:1.5px}
+  .phase.done .deliver{opacity:.62}
+
+  /* ---------- rodape ---------- */
+  footer{
+    margin-top:34px;
+    padding:22px 0 70px;
+    border-top:1px solid var(--line);
+    color:var(--muted);
+    font-size:.86rem;
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  footer span{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;font-size:.7rem}
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important}
+  }
+  @media (max-width:720px){
+    body{font-size:16px}
+    .wrap{padding:0 20px}
+    header{padding:34px 0 28px}
+    .phase{grid-template-columns:26px 1fr;gap:16px;padding:20px 14px 22px 0}
+    .box{width:26px;height:26px}
+    .box svg{width:13px;height:13px}
+    .track::before{left:13px;top:56px;bottom:54px}
+    .deliver{display:flex;flex-direction:column;gap:5px}
+  }
+
+  @media (max-width:430px){
+    .wrap{padding:0 16px}
+    header{padding:28px 0 22px}
+    h1{font-size:clamp(1.95rem,9vw,2.6rem)}
+    h2{font-size:1.3rem}
+    .phase{gap:14px;padding:18px 4px 20px 0}
+    .items li{font-size:.95rem}
+    footer{flex-direction:column;gap:8px}
+  }
+</style>
+<style>
+  /* ---------- documento ---------- */
+  .doc section{padding:52px 0;border-top:1px solid var(--line)}
+  .doc section:first-of-type{border-top:0}
+  .sec-head{display:flex;flex-direction:column;gap:9px;margin-bottom:22px}
+  .sec-head .eyebrow{color:var(--accent)}
+  .doc h2{font-size:clamp(1.5rem,3.2vw,2rem);line-height:1.14;letter-spacing:-.015em}
+  .doc p{max-width:66ch;margin-bottom:15px}
+  .doc p:last-child{margin-bottom:0}
+  .doc strong{font-weight:600;color:var(--ink)}
+  .doc em{font-style:italic}
+
+  .callout{
+    background:var(--surface);
+    border:1px solid var(--line-strong);
+    border-radius:6px;
+    padding:22px 24px;
+    box-shadow:var(--shadow);
+    margin:22px 0 4px;
+    max-width:66ch;
+  }
+  .callout .lbl{
+    display:block;
+    font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:9px;
+  }
+  .callout p{margin:0;font-family:"Fraunces","Iowan Old Style",Georgia,serif;
+    font-size:1.16rem;line-height:1.4;font-weight:500}
+
+  .steps{display:flex;flex-direction:column;gap:2px;margin-top:20px}
+  .step{
+    display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:baseline;
+    padding:18px 20px;background:var(--surface);
+    border:1px solid var(--line);
+  }
+  .step:first-child{border-radius:6px 6px 0 0}
+  .step:last-child{border-radius:0 0 6px 6px}
+  .step .when{
+    font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--accent);white-space:nowrap;
+  }
+  .step .what{font-family:"Fraunces",Georgia,serif;font-size:1.08rem;font-weight:500;line-height:1.35}
+  .step .what small{display:block;font-family:"Archivo",sans-serif;font-size:.9rem;
+    font-weight:400;color:var(--muted);margin-top:4px;line-height:1.45}
+
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:20px}
+  .card .tag{
+    display:block;font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:9px;
+  }
+  .card .h{display:block;font-family:"Fraunces",Georgia,serif;font-size:1.05rem;
+    font-weight:600;line-height:1.25;margin-bottom:7px}
+  .card p{font-size:.93rem;color:var(--ink-2);margin:0;max-width:none}
+
+  .facts{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line-strong);
+    border-bottom:1px solid var(--line-strong);margin-top:24px}
+  .facts div{padding:20px 22px;border-left:1px solid var(--line);display:flex;flex-direction:column;gap:3px}
+  .facts div:first-child{border-left:0;padding-left:0}
+  .facts .n{font-family:"Fraunces",Georgia,serif;font-size:1.6rem;font-weight:600;
+    line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .facts .l{font-size:.85rem;color:var(--muted);line-height:1.35}
+
+  .science{
+    border-left:2px solid var(--accent);
+    padding:4px 0 4px 18px;margin:20px 0;max-width:64ch;
+    font-size:.94rem;color:var(--ink-2);
+  }
+  .science b{color:var(--ink);font-weight:600}
+
+  .open li{display:grid;grid-template-columns:16px 1fr;gap:11px;align-items:start;
+    font-size:.99rem;line-height:1.5;color:var(--ink-2);padding:7px 0}
+  .open li::before{content:"";width:7px;height:7px;margin-top:.6em;margin-left:3px;
+    background:var(--line-strong);border-radius:50%}
+  .open{display:flex;flex-direction:column;margin-top:6px}
+
+  @media (max-width:720px){
+    .cards{grid-template-columns:1fr}
+    .facts{grid-template-columns:1fr}
+    .facts div{border-left:0;border-top:1px solid var(--line);padding:16px 0}
+    .facts div:first-child{border-top:0}
+    .step{grid-template-columns:1fr;gap:6px;padding:16px 16px}
+    .doc section{padding:40px 0}
+  }
+</style>
+
+<div class="wrap doc">
+
+  <nav class="tabs">
+    <a class="tab" href="../">Cronograma</a>
+    <a class="tab" href="./" aria-current="page">Estratégia</a>
+  </nav>
+
+  <header>
+    <p class="eyebrow">Coprodução · Guilherme Neves</p>
+    <h1>Estratégia e oferta</h1>
+    <p class="sub">O que foi definido para o funil: para quem falamos, o que nomeamos como problema, o que apresentamos como solução, o que prometemos e o que vendemos.</p>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">O produto</p>
+      <h2>English Together</h2>
+    </div>
+    <p>O curso vendido na VSL chama <strong>English Together</strong>. A entrega é a jornada que já existe hoje, sem nenhuma produção nova de conteúdo.</p>
+    <p>A <strong>Escola do Inglês</strong> deixa de ser o nome do produto e passa a ser a plataforma — a marca guarda-chuva, livre para hospedar outros cursos adiante, inclusive este. A razão é simples: como você ainda é desconhecido neste nicho, o nome do produto precisa carregar a promessa sozinho, e nome de escola não carrega promessa nenhuma.</p>
+    <div class="facts">
+      <div><span class="n">80</span><span class="l">aulas, em quatro blocos de 20</span></div>
+      <div><span class="n">3</span><span class="l">trilhas: básica, intermediária e avançada</span></div>
+      <div><span class="n">10 meses</span><span class="l">a duas aulas por semana</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Para quem falamos</p>
+      <h2>O travado</h2>
+    </div>
+    <p>A VSL fala com quem <strong>já estudou inglês por anos e ainda não fala</strong>. Ele entende quando lê e quando ouve, tem certificado guardado, tirava nota boa — e trava na hora de abrir a boca. Já tentou cursinho, aplicativo, série sem legenda. Acha que o problema é ele.</p>
+    <p>O produto continua atendendo do zero absoluto à fluência. A VSL é que não precisa dizer isso na abertura: falar com dois públicos ao mesmo tempo é falar com nenhum. Escolhemos o travado porque ele tem urgência — a vergonha de travar numa reunião ou numa viagem dói hoje, enquanto quem nunca tentou sente apenas uma vontade vaga.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">O problema que nomeamos</p>
+      <h2>Tradução Mental</h2>
+    </div>
+    <p>O inglês dele só chega ao significado <strong>passando pelo português</strong>, e precisa refazer o caminho de volta na hora de falar. Recebe a frase em inglês, traduz na cabeça, pensa a resposta em português, traduz de novo para o inglês, procura a regra, conjuga o verbo. Quando termina, a conversa já seguiu.</p>
+    <p>É por isso que mais gramática nunca resolveu: regra é justamente o que obriga a montar a frase em português primeiro.</p>
+    <div class="science">
+      <b>A ciência por trás.</b> O Modelo Hierárquico Revisado, de Kroll &amp; Stewart (1994), descreve duas rotas para o significado numa segunda língua: a <em>rota indireta</em>, que passa pela palavra na língua materna, e a <em>rota direta</em>, do bilíngue proficiente, que vai direto ao conceito. Kern (1994) mediu a tradução mental em leitores de segunda língua. O achado central é que a rota indireta não desaparece com mais estudo de regra — ela desaparece com uso real.
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">A solução</p>
+      <h2>Input Nativo</h2>
+    </div>
+    <p><strong>A ciência é velha e não é nossa.</strong> Fluência vem de imersão e exposição, não de estudo de regra. Isso não é opinião de ninguém deste projeto — é o que a pesquisa em aquisição de idiomas mostra há décadas.</p>
+    <p><strong>O problema nunca foi o método, foi o acesso.</strong> Input nativo sempre exigiu morar fora ou pagar imersão presencial. É exatamente por isso que o Brasil ensina gramática: é o que dá para fazer sem um nativo na sala.</p>
+    <p><strong>O que você desenvolveu foi a entrega.</strong> Usando os 11 anos nos Estados Unidos, a graduação em universidade americana e a experiência de trabalhar e chefiar americanos, você desenhou uma forma de colocar a imersão dentro da aula: um brasileiro fluente que explica de um jeito que o brasileiro entende, e um americano nativo que fala como se fala de verdade.</p>
+    <div class="callout">
+      <span class="lbl">O ponto que vira a chave</span>
+      <p>Hoje ou você compra o curso de um brasileiro, e fica preso no inglês de regra que ele mesmo aprendeu — ou de um nativo, que não consegue te explicar em português. Na mesma aula, os dois problemas somem.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">A promessa</p>
+      <h2>Três degraus, não uma aposta de um ano</h2>
+    </div>
+    <p>Uma promessa única de fluência em um ano não é verificável no momento da compra — o aluno assume todo o risco e não tem como saber se está no caminho certo. A escada resolve isso: ele compra por algo que testa de imediato, confirma o rumo em três meses e recebe o destino em dez.</p>
+    <div class="steps">
+      <div class="step">
+        <span class="when">Primeira aula</span>
+        <span class="what">Você diz sua primeira frase do jeito que um americano diria
+          <small>Sem montar em português antes. Toda aula termina em tarefa prática de fala, então isso acontece por construção do curso, não por esforço extra.</small></span>
+      </div>
+      <div class="step">
+        <span class="when">3 meses</span>
+        <span class="what">Você domina o inglês essencial
+          <small>Se vira sozinho no aeroporto, no hotel, no restaurante, nas compras, no small talk e na conversa básica de trabalho — sem travar e sem tradutor. É o fechamento da trilha básica.</small></span>
+      </div>
+      <div class="step">
+        <span class="when">10 meses</span>
+        <span class="what">Você conquista o inglês fluente
+          <small>Sustenta conversa em qualquer contexto, entende nativo em velocidade real e pensa em inglês sem traduzir.</small></span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">A entrada</p>
+      <h2>Ninguém recomeça do alfabeto</h2>
+    </div>
+    <p>Na entrada o aluno responde um nivelamento e é direcionado à trilha certa. Quem já estudou anos entra pela intermediária, que abre em conversação, e não pela básica, que começa em alfabeto e cores.</p>
+    <p>Isso resolve um risco concreto — o travado que abre a primeira aula e sente que comprou curso de iniciante — e vira argumento de venda: <strong>todo curso que ele já fez o obrigou a recomeçar do zero</strong>, e recomeçar é parte do motivo de ele ter desistido antes.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">A oferta</p>
+      <h2>O que ele leva, por quanto e com qual risco</h2>
+    </div>
+    <div class="facts">
+      <div><span class="n">R$ 297</span><span class="l">preço do front</span></div>
+      <div><span class="n">2 anos</span><span class="l">de acesso — o dobro do padrão</span></div>
+      <div><span class="n">30 dias</span><span class="l">de garantia incondicional</span></div>
+    </div>
+    <p style="margin-top:24px"><strong>O dobro de acesso não é generosidade solta, é proteção da promessa.</strong> Uma jornada de dez a doze meses vendida com doze meses de acesso não deixa folga nenhuma, e todo adulto ocupado atrasa em algum momento. Com dois anos, o resultado deixa de depender do ritmo do aluno — e o dobro é apresentado como vantagem desta oferta.</p>
+    <p><strong>A garantia agora cobre a promessa que vende.</strong> São 30 dias, sem condição e sem exigir prova de esforço, envolvendo com folga o prazo do primeiro degrau. Pela primeira vez, o que a VSL promete e o que a garantia protege são a mesma coisa.</p>
+    <h2 style="font-size:1.25rem;margin-top:34px">Os três bônus</h2>
+    <p>Cada bônus existe para derrubar uma objeção específica. Bônus que só engorda a oferta custa produção e não move venda.</p>
+    <div class="cards">
+      <div class="card">
+        <span class="tag">Objeção</span>
+        <span class="h">“Não tenho tempo”</span>
+        <p>Reduz o atrito diário e mostra que a rotina cabe na vida que ele já tem.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Objeção</span>
+        <span class="h">“Tenho vergonha de errar”</span>
+        <p>Dá um ambiente seguro para falar errado antes de falar em público.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Objeção</span>
+        <span class="h">“Adulto não aprende mais”</span>
+        <p>A única das três que é uma crença sobre si mesmo. Enquanto ela estiver de pé, nenhum outro argumento entra.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">A esteira</p>
+      <h2>O que a gravação dá, e o que só uma pessoa dá</h2>
+    </div>
+    <p>O <strong>front</strong> é a jornada gravada, completa. Quem compra só ele chega à fluência prometida — não há degrau escondido.</p>
+    <p>O <strong>upsell</strong> é a mentoria, e ela vende o que a gravação não consegue dar: alguém ouvindo <em>você</em> falar e corrigindo em tempo real, antes do erro endurecer. É a continuação lógica do mecanismo — o curso resolve a entrada, a mentoria resolve a saída.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Uma decisão de posicionamento</p>
+      <h2>Sobre o módulo de gramática</h2>
+    </div>
+    <p>O curso tem 20 aulas de Gramática Essencial, e a tese do funil é que a gramática foi o que travou o aluno. Isso não é contradição, desde que a posição fique explícita em todo lugar: <strong>a gramática vem depois da fala, para polir.</strong> Ela não é etapa da jornada nem pré-requisito de nada.</p>
+    <p>Dito assim, ela deixa de ser um risco e vira prova a nosso favor: está tudo ali, inclusive a gramática — só que ela chega quando já não pode mais te travar.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Em aberto</p>
+      <h2>O que ainda falta fechar</h2>
+    </div>
+    <ul class="open">
+      <li><span><strong>O conteúdo dos três bônus.</strong> Depende de sabermos o que já existe além das aulas — material de apoio, comunidade, encontro ao vivo, certificado. O que já estiver gravado vira bônus sem produção nova.</span></li>
+      <li><span><strong>A oferta da mentoria</strong> como upsell imediato: formato, preço e o que exatamente ela entrega além do curso.</span></li>
+      <li><span><strong>O downsell.</strong></span></li>
+      <li><span><strong>Depoimentos de alunos.</strong> O mais urgente dos quatro. Na VSL você aparece como quem já sabe o caminho, então toda a prova de resultado vem de aluno — e gravar, receber e editar depoimento leva dias.</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>Matheus Luswarghi · Estratégia e copy</span>
+    <span>Fase 1 · Estratégia e oferta</span>
+  </footer>
+
+</div>
